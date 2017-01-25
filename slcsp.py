@@ -44,26 +44,29 @@ for silver_plans in slcsp:
             else:
                 silver_rate_area_state[silver_zip] = {'rate_area': zip['rate_area'], 'state': zip['state']}
 
-
 silver_plans = []
 answers = OrderedDict()
-for zip, rate_area_state in silver_rate_area_state.items():
-    if not silver_rate_area_state[zip]:
-        answers[zip] = []
+for zipcode, rate_area_state in silver_rate_area_state.items():
+    if not silver_rate_area_state[zipcode]:
+        answers[zipcode] = ''
     else:
         for plan in plans:
             if rate_area_state['rate_area'] == plan['rate_area'] and rate_area_state['state'] == plan['state']:
-                if zip in answers:
-                    answers[zip].append(plan['rate'])
+                if zipcode in answers:
+                    answers[zipcode].append(plan['rate'])
                 else:
-                    answers[zip] = [plan['rate']]
+                    answers[zipcode] = [plan['rate']]
 
-    if zip not in answers:
-        answers[zip] = []
+    if zipcode not in answers:
+        answers[zipcode] = ''
 
-for zip, rates in answers.items():
-    if len(rates) > 1:
-        rates.sort()
-        print zip + ', %s' % rates[1]
-    else:
-        print zip + ', ' + str(rates)
+with open(args['slcsp'], 'w') as f:
+    writer = csv.DictWriter(f, ['zipcode', 'rate'], lineterminator='\n')
+    writer.writeheader()
+
+    for zipcode, rates in answers.items():
+        if len(rates) > 1:
+            rates.sort()
+            writer.writerow({'zipcode': zipcode, 'rate': rates[1]})
+        else:
+            writer.writerow({'zipcode': zipcode, 'rate': str(rates)})
