@@ -3,6 +3,10 @@
 Calculate second lowest cost silver plan (SLCSP)
 ================================================
 
+# Run Program
+
+`python slcsp.py -s slcsp.csv -p plans.csv -z zips.csv`
+
 Problem
 -------
 
