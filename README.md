@@ -30,9 +30,9 @@ reason or reasons are there? Fill in your explanation(s) below.
 
     Reason:
 
-    1) ???
+    1) If that zipcode doesn't not have a silver plan associated with it
 
-    2) ???
+    2) If that zipcode falls out of the range of the rate areas
 
 Additional information
 ----------------------
