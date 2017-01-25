@@ -10,6 +10,7 @@ parser.add_argument('-z', '--zips', help='a mapping of ZIP Code to county/counti
 
 args = vars(parser.parse_args())
 
+
 def parse_csv(arg_name, silver_plan_flag):
     data = []
     with open(args[arg_name], 'r') as file_obj:
@@ -31,27 +32,38 @@ slcsp = parse_csv('slcsp', False)
 plans = parse_csv('plans', True)
 zips = parse_csv('zips', False)
 
-count = 0
 silver_rate_area_state = OrderedDict()
 for silver_plans in slcsp:
     silver_zip = silver_plans['zipcode']
     for zip in zips:
         if silver_zip == zip['zipcode']:
-            silver_rate_area_state[silver_zip] = {'rate_area': zip['rate_area'], 'state': zip['state']}
+            if silver_zip in silver_rate_area_state:
+                if silver_rate_area_state[silver_zip]['rate_area'] != zip['rate_area']:
+                    silver_rate_area_state[silver_zip] = None
+                    break
+            else:
+                silver_rate_area_state[silver_zip] = {'rate_area': zip['rate_area'], 'state': zip['state']}
+
 
 silver_plans = []
 answers = OrderedDict()
 for zip, rate_area_state in silver_rate_area_state.items():
-    for plan in plans:
-        if rate_area_state['rate_area'] == plan['rate_area'] and rate_area_state['state'] == plan['state']:
-            if zip in answers:
-                answers[zip].append(plan['rate'])
-            else:
-                answers[zip] = [plan['rate']]
+    if not silver_rate_area_state[zip]:
+        answers[zip] = []
+    else:
+        for plan in plans:
+            if rate_area_state['rate_area'] == plan['rate_area'] and rate_area_state['state'] == plan['state']:
+                if zip in answers:
+                    answers[zip].append(plan['rate'])
+                else:
+                    answers[zip] = [plan['rate']]
+
+    if zip not in answers:
+        answers[zip] = []
 
 for zip, rates in answers.items():
     if len(rates) > 1:
         rates.sort()
         print zip + ', %s' % rates[1]
     else:
-        print zip + ', ' + rates[0]
+        print zip + ', ' + str(rates)

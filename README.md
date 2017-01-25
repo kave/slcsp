@@ -30,9 +30,9 @@ reason or reasons are there? Fill in your explanation(s) below.
 
     Reason:
 
-    1) If that zipcode doesn't not have a silver plan associated with it
+    1) Some zipcodes exist in different states with different rate_area. Readme doesn't provide guidance on how to handle these cases so i'm leaving them blank. Also an additional reason is `rate_area` description doesn't explain what is a correct (state, number) tuple, i couldn't tell if they were correct or not.
 
-    2) If that zipcode falls out of the range of the rate areas
+    2) Zipcode doesn't have a rate_area/state in plans.csv
 
 Additional information
 ----------------------
